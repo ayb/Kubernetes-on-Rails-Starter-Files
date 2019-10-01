@@ -32,7 +32,13 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  if ENV["CDN_HOST"].present?
+    config.action_controller.asset_host = ENV["CDN_HOST"]
+  end
+  config.public_file_server.headers = {
+    "Cache-Control" => "public, s-maxage=31536000, max-age=15552000",
+    "Expires" => "{1.year.from_now.to_formatted_s(:rfc822)}"
+  }
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -41,6 +47,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :local
 
+  # can't do this via Kubernetes because Rails communicates on port 3000 / this will break things
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 

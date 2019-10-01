@@ -45,3 +45,5 @@ spec:
           value: xp-abe-captionedimages
         - name: GCS_BUCKET
           value: xp-abe-captionedimages
+        - name: CDN_HOST
+          value: captionedimages-assets.reidbrown.com
